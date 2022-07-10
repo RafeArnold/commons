@@ -1,0 +1,61 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+    id 'maven-publish'
+}
+
+dependencies {
+    implementation project(":config")
+    implementation project(":shared-data")
+    implementation "com.google.inject:guice:$guice_version"
+    compileOnly "org.slf4j:slf4j-api:$slf4j_version"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"
+    testImplementation "io.mockk:mockk:$mockk_version"
+    testImplementation "org.slf4j:slf4j-api:$slf4j_version"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = '11'
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = '11'
+}
+
+sourceSets {
+    main.kotlin.srcDirs += 'src/main/kotlin'
+    main.java.srcDirs += 'src/main/java'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.kotlin
+    from sourceSets.main.java
+    archiveClassifier = 'sources'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = rootProject.group
+            artifactId = "$rootProject.name-$project.name"
+            version = rootProject.project.version
+            from components.java
+            artifact sourcesJar
+        }
+    }
+
+    repositories {
+        maven {
+            url = s3ArtifactsUrl
+            credentials(AwsCredentials) {
+                accessKey awsAccessKey
+                secretKey awsSecretKey
+            }
+        }
+    }
+}
