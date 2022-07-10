@@ -4,16 +4,14 @@ plugins {
 }
 
 dependencies {
-    compileOnly project(":config")
-    compileOnly project(":shared-data")
+    implementation project(":config")
+    implementation project(":shared-data")
     compileOnly "com.google.inject:guice:$guice_version"
     compileOnly "org.slf4j:slf4j-api:$slf4j_version"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"
     testImplementation "io.mockk:mockk:$mockk_version"
-    testImplementation project(":config")
-    testImplementation project(":shared-data")
     testImplementation "org.slf4j:slf4j-api:$slf4j_version"
 }
 
