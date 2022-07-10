@@ -42,7 +42,13 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             groupId = rootProject.group
-            artifactId = "$rootProject.name-$project.name"
+            def projectHierarchy = new ArrayList<String>()
+            def currentProject = project
+            while (currentProject != null) {
+                projectHierarchy.add(0, currentProject.name)
+                currentProject = currentProject.parent
+            }
+            artifactId = projectHierarchy.join("-")
             version = rootProject.project.version
             from components.java
             artifact sourcesJar
