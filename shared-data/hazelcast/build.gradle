@@ -4,14 +4,16 @@ plugins {
 }
 
 dependencies {
-    implementation project(":shared-data")
-    implementation project(":shared-data:simple")
+    compileOnly project(":shared-data")
+    compileOnly project(":shared-data:simple")
     compileOnly "com.hazelcast:hazelcast:$hazelcast_version"
     compileOnly "io.vertx:vertx-core:$vertx_version"
     compileOnly "com.google.inject:guice:$guice_version"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"
+    testImplementation project(":shared-data")
+    testImplementation project(":shared-data:simple")
     testImplementation "com.hazelcast:hazelcast:$hazelcast_version"
     testImplementation "io.vertx:vertx-web:$vertx_version"
 }
