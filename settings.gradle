@@ -1,5 +1,6 @@
 rootProject.name = 'commons'
 include 'config'
+include 'misc'
 include 'shared-data'
 include 'shared-data:hazelcast'
 include 'shared-data:simple'
