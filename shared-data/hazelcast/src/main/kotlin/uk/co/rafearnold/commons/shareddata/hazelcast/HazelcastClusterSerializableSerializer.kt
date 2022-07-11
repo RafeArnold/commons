@@ -6,6 +6,7 @@ import com.hazelcast.nio.serialization.StreamSerializer
 import io.vertx.core.buffer.Buffer
 import io.vertx.core.shareddata.ClusterSerializable
 import java.io.IOException
+import java.lang.reflect.Constructor
 
 class HazelcastClusterSerializableSerializer : StreamSerializer<ClusterSerializable> {
 
@@ -28,8 +29,9 @@ class HazelcastClusterSerializableSerializer : StreamSerializer<ClusterSerializa
         val serializable: ClusterSerializable =
             try {
                 val clazz: Class<*> = loadClass(className)
-                val serializable: ClusterSerializable =
-                    clazz.getDeclaredConstructor().newInstance() as ClusterSerializable
+                val constructor: Constructor<out Any> = clazz.getDeclaredConstructor()
+                constructor.isAccessible = true
+                val serializable: ClusterSerializable = constructor.newInstance() as ClusterSerializable
                 serializable.readFromBuffer(0, Buffer.buffer(bytes))
                 serializable
             } catch (e: Exception) {
